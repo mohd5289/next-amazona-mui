@@ -1,6 +1,7 @@
 import Layout from '@/components/Layout';
 import CheckoutWizard from '@/components/checkoutWizard';
 import { Store } from '@/utils/Store';
+import getError from '@/utils/error';
 import useStyles from '@/utils/styles';
 import {
   Grid,
@@ -18,18 +19,22 @@ import {
   ListItem,
   Card,
   List,
+  CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { closeSnackbar, enqueueSnackbar, useSnackbar } from 'notistack';
 import React, { useContext, useEffect } from 'react';
 
 function PlaceOrder() {
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
+  const [loading, setLoading] = useState(false);
   // const { product } = props;
 
   const {
@@ -46,7 +51,36 @@ function PlaceOrder() {
     if (!paymentMethod) {
       router.push('/payment');
     }
+    if (cartItems.length === 0) {
+      router.push('/cart');
+    }
   }, []);
+  const placeOrderHandler = async () => {
+    closeSnackbar();
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        '/api/orders',
+        {
+          orderItems: cartItems,
+          shippingAddress,
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          totalPrice,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+    } catch (error) {
+      setLoading(false);
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
   return (
     <Layout title="Shopping Cart">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
@@ -204,10 +238,20 @@ function PlaceOrder() {
               </ListItem>
 
               <ListItem>
-                <Button variant="contained" color="primary" fullWidth>
+                <Button
+                  onClick={placeOrderHandler}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
                   Place Order
                 </Button>
               </ListItem>
+              {loading && (
+                <ListItem>
+                  <CircularProgress />
+                </ListItem>
+              )}
             </List>
           </Card>
         </Grid>
