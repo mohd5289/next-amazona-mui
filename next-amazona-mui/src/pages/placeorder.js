@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout';
 import CheckoutWizard from '@/components/checkoutWizard';
 import { Store } from '@/utils/Store';
-import getError from '@/utils/error';
+import { getError } from '@/utils/error';
 import useStyles from '@/utils/styles';
 import {
   Grid,
@@ -22,12 +22,13 @@ import {
   CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { closeSnackbar, enqueueSnackbar, useSnackbar } from 'notistack';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 function PlaceOrder() {
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
@@ -38,6 +39,7 @@ function PlaceOrder() {
   // const { product } = props;
 
   const {
+    userInfo,
     cart: { cartItems, shippingAddress, paymentMethod },
   } = state;
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
@@ -76,9 +78,12 @@ function PlaceOrder() {
           },
         }
       );
+      Cookies.remove('cartItems');
+      setLoading(false);
+      router.push(`/order/${data._id}`);
     } catch (error) {
       setLoading(false);
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(error), { variant: 'error' });
     }
   };
   return (

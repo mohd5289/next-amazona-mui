@@ -30,7 +30,9 @@ export default function Shipping() {
   // if (!userInfo) {
   //   router.push('/');
   // }
+
   useEffect(() => {
+    console.log(userInfo);
     if (!userInfo) {
       router.push('/login?redirect=/shipping');
     }

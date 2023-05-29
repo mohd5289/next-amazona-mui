@@ -34,15 +34,11 @@ export default function Home(props) {
   //     return <div>Product not Found</div>;
   //   }
   console.log(product);
-  const addToCartHandler = async (product) => {
-    const { data } = await axios.get(`/api/products/${product._id}`);
 
-    if (data.countInStock <= 0) {
-      window.alert('Sorry. Product is out of stock');
-      return;
-    }
+  const addToCartHandler = async (product) => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
       window.alert('Sorry. Product is out of stock');
       return;
@@ -50,7 +46,6 @@ export default function Home(props) {
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
     router.push('/cart');
   };
-
   return (
     <Layout>
       <div>
