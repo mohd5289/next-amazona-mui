@@ -37,5 +37,8 @@ const useStyles = makeStyles({
     backgroundColor: 'transparent',
   },
   section: { marginTop: 1, marginBottom: 1 },
+  error: {
+    color: '#f04040',
+  },
 });
 export default useStyles;
