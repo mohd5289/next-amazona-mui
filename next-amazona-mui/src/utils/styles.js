@@ -36,6 +36,10 @@ const useStyles = makeStyles({
   transparentBackground: {
     backgroundColor: 'transparent',
   },
+  fullWidth:{
+    width:'100%'
+  },
+
   section: { marginTop: 1, marginBottom: 1 },
   error: {
     color: '#f04040',

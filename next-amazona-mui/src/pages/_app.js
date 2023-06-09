@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
   }, []);
   return (
     <StoreProvider>
-      <PayPalScriptProvider deferLoading={true}>
+      <PayPalScriptProvider deferLoading={true} >
         <Component {...pageProps} />
       </PayPalScriptProvider>
     </StoreProvider>

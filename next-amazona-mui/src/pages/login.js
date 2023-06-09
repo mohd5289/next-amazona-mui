@@ -45,7 +45,9 @@ export default function Login() {
       dispatch({ type: 'USER_LOGIN', payload: data });
       Cookies.set('userInfo', JSON.stringify(data));
       router.push(redirect || '/');
-      alert('success login');
+
+      
+      
     } catch (err) {
       enqueueSnackbar(
         err.response.data ? err.response.data.message : err.message,

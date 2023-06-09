@@ -58,8 +58,11 @@ function PlaceOrder() {
     }
   }, []);
   const placeOrderHandler = async () => {
+   
+   
     closeSnackbar();
     try {
+
       setLoading(true);
       const { data } = await axios.post(
         '/api/orders',
@@ -78,6 +81,7 @@ function PlaceOrder() {
           },
         }
       );
+      dispatch({ type: 'CART_CLEAR' });
       Cookies.remove('cartItems');
       setLoading(false);
       router.push(`/order/${data._id}`);

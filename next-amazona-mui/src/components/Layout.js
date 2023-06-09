@@ -68,10 +68,12 @@ export default function Layout({ title, description, children }) {
     setAnchorEl(null);
   };
   const logoutClickHandler = (e) => {
+   
     setAnchorEl(null);
     dispatch({ type: 'USER_LOGOUT' });
-    Cookies.get('userInfo');
+    Cookies.remove('userInfo');
     Cookies.remove('cartItems');
+    
     router.push('/');
   };
   return (
