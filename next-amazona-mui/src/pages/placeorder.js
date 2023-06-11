@@ -58,11 +58,8 @@ function PlaceOrder() {
     }
   }, []);
   const placeOrderHandler = async () => {
-   
-   
     closeSnackbar();
     try {
-
       setLoading(true);
       const { data } = await axios.post(
         '/api/orders',
@@ -85,11 +82,12 @@ function PlaceOrder() {
       Cookies.remove('cartItems');
       setLoading(false);
       router.push(`/order/${data._id}`);
-    } catch (error) {
+    } catch (err) {
       setLoading(false);
-      enqueueSnackbar(getError(error), { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
+  
   return (
     <Layout title="Shopping Cart">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
