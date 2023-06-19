@@ -19,6 +19,7 @@ export default function Register() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { redirect } = router.query;
   const { state, dispatch } = useContext(Store);
   console.log(state);
