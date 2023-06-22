@@ -57,19 +57,32 @@ export default function Layout({ title, description, children }) {
     Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
   };
   const [anchorEl, setAnchorEl] = useState(null);
+  // const [isOpen, setOpen] = useState(false);
 
   const loginMenuCloseHandler = (e, redirect) => {
     setAnchorEl(null);
-    if (redirect) {
-      router.push(redirect);
-    }
+  };
+  const loginMenuCloseProfile = () => {
+    setAnchorEl(null);
+
+    router.push("/profile");
+  };
+  const loginMenuCloseOrderHistory = () => {
+    setAnchorEl(null);
+
+    router.push("/order-history");
+  };
+  const loginMenuCloseDashboard = () => {
+    setAnchorEl(null);
+
+    router.push("/admin/dashboard");
   };
   const loginClickHandler = (e) => {
     setAnchorEl(e.currentTarget);
   };
-  const loginMenuClosehandler = (e) => {
-    setAnchorEl(null);
-  };
+  // const loginMenuClosehandler = (e) => {
+  //   setAnchorEl(null);
+  // };
   const logoutClickHandler = (e) => {
     setAnchorEl(null);
     dispatch({ type: "USER_LOGOUT" });
@@ -99,13 +112,20 @@ export default function Layout({ title, description, children }) {
                 {" "}
               </Switch>
               <Link href="/cart" passHref>
-                {cart.cartItems.length > 0 ? (
-                  <Badge color="secondary" badgeContent={cart.cartItems.length}>
-                    Cart
-                  </Badge>
-                ) : (
-                  "Cart"
-                )}
+                <MUILink>
+                  <Typography component="span">
+                    {cart.cartItems.length > 0 ? (
+                      <Badge
+                        color="secondary"
+                        badgeContent={cart.cartItems.length}
+                      >
+                        Cart
+                      </Badge>
+                    ) : (
+                      "Cart"
+                    )}
+                  </Typography>
+                </MUILink>
               </Link>
               {userInfo ? (
                 <>
@@ -113,7 +133,7 @@ export default function Layout({ title, description, children }) {
                     aria-controls="simple-menu"
                     aria-haspopup="true"
                     onClick={loginClickHandler}
-                    className={classes.navbarButton}
+                    sx={classes.navbarButton}
                   >
                     {userInfo.name}
                   </Button>
@@ -124,24 +144,12 @@ export default function Layout({ title, description, children }) {
                     open={Boolean(anchorEl)}
                     onClose={loginMenuCloseHandler}
                   >
-                    <MenuItem
-                      onClick={(e) => loginMenuCloseHandler(e, "/profile")}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      onClick={(e) =>
-                        loginMenuCloseHandler(e, "/order-history")
-                      }
-                    >
+                    <MenuItem onClick={loginMenuCloseProfile}>Profile</MenuItem>
+                    <MenuItem onClick={loginMenuCloseOrderHistory}>
                       Order History
                     </MenuItem>
                     {userInfo.isAdmin && (
-                      <MenuItem
-                        onClick={(e) =>
-                          loginMenuCloseHandler(e, "/admin/dashboard")
-                        }
-                      >
+                      <MenuItem onClick={loginMenuCloseDashboard}>
                         Admin Dashboard
                       </MenuItem>
                     )}
@@ -150,7 +158,9 @@ export default function Layout({ title, description, children }) {
                 </>
               ) : (
                 <Link href="/login" passHref>
-                  <MUILink>Login</MUILink>
+                  <MUILink>
+                    <Typography component="span">Login</Typography>
+                  </MUILink>
                 </Link>
               )}
             </div>

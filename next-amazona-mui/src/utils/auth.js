@@ -1,4 +1,4 @@
-import jwt, { decode } from 'jsonwebtoken';
+import jwt, { decode } from "jsonwebtoken";
 
 const signToken = (user) => {
   return jwt.sign(
@@ -11,7 +11,7 @@ const signToken = (user) => {
 
     process.env.JWT_SECRET,
     {
-      expiresIn: '30d',
+      expiresIn: "30d",
     }
   );
 };
@@ -21,15 +21,23 @@ const isAuth = async (req, res, next) => {
     const token = authorization.slice(7, authorization.length);
     jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
       if (err) {
-        res.status(401).send({ message: 'Token is not valid' });
+        res.status(401).send({ message: "Token is not valid" });
       } else {
         req.user = decode;
         next();
       }
     });
   } else {
-    res.status(401).send({ message: 'Token is not supplied' });
+    res.status(401).send({ message: "Token is not supplied" });
   }
   // jwt.verify(token)
 };
-export { signToken, isAuth };
+const isAdmin = async (req, res, next) => {
+  if (req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401).send({ message: "User is not admin" });
+  }
+  // jwt.verify(token)
+};
+export { signToken, isAuth, isAdmin };
