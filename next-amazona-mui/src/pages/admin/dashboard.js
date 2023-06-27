@@ -123,6 +123,11 @@ function AdminDashboard() {
                 </ListItem>
               </Link>
             </List>
+            <Link href="/admin/users" passHref>
+              <ListItem button component="a">
+                <ListItemText primary="Users"></ListItemText>
+              </ListItem>
+            </Link>
           </Card>
         </Grid>
         <Grid item md={9} xs={12}>

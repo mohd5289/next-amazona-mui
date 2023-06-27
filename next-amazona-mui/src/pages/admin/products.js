@@ -188,6 +188,11 @@ function AdminProducts() {
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </Link>
+              <Link href="/admin/users" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Users"></ListItemText>
+                </ListItem>
+              </Link>
             </List>
           </Card>
         </Grid>
