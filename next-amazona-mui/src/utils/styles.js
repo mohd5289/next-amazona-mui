@@ -55,5 +55,9 @@ const useStyles = makeStyles({
     width: "100%",
   },
   submit: {},
+  sidebar: {},
+  toolbar: {
+    justifyContent: "space-between",
+  },
 });
 export default useStyles;

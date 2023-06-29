@@ -1,18 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Head from "next/head";
 import {
   AppBar,
   Badge,
+  Box,
   Button,
   cardActionAreaClasses,
   createTheme,
   CssBaseline,
+  Drawer,
+  Icon,
   Menu,
+  IconButton,
+  List,
+  ListItem,
   MenuItem,
   Switch,
   ThemeProvider,
   Toolbar,
   Typography,
+  Divider,
+  ListItemText,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import useStyles from "@/utils/styles";
@@ -22,6 +30,13 @@ import { Store } from "@/utils/Store";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import CancelIcon from "@mui/icons-material/Cancel";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Cancel } from "@material-ui/icons";
+import { useSnackbar } from "notistack";
+import axios from "axios";
+import { getError } from "@/utils/error";
+// import Menu from "@mui/icons-material/Menu";
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
@@ -58,7 +73,20 @@ export default function Layout({ title, description, children }) {
   };
   const [anchorEl, setAnchorEl] = useState(null);
   // const [isOpen, setOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
 
+  const fetchCategories = async () => {
+    try {
+      const { data } = await axios.get(`/api/products/categories`);
+      setCategories(data);
+    } catch (error) {
+      enqueueSnackbar(getError(error), { variant: "error" });
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, {});
   const loginMenuCloseHandler = (e, redirect) => {
     setAnchorEl(null);
   };
@@ -91,6 +119,13 @@ export default function Layout({ title, description, children }) {
 
     router.push("/");
   };
+  const [sideBarVisible, setSideBarVisible] = useState(false);
+  const sidebarOpenHandler = () => {
+    setSideBarVisible(true);
+  };
+  const sideBarCloseBarHandler = () => {
+    setSideBarVisible(false);
+  };
   return (
     <div>
       <Head>
@@ -100,12 +135,60 @@ export default function Layout({ title, description, children }) {
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme={true} />
         <AppBar position="static" className={classes.navbar}>
-          <Toolbar>
-            <Link href="/" passHref>
-              <MUILink>
-                <Typography className={classes.brand}>amazona</Typography>
-              </MUILink>
-            </Link>
+          <Toolbar className={classes.toolbar}>
+            <Box display="flex" alignItems="center">
+              <IconButton
+                edge="start"
+                aria-label="open drawer"
+                onClick={sidebarOpenHandler}
+              >
+                <MenuIcon sx={classes.navbar} />
+              </IconButton>
+              <Link href="/" passHref>
+                <MUILink>
+                  <Typography className={classes.brand}>amazona</Typography>
+                </MUILink>
+              </Link>
+            </Box>
+            <Drawer
+              anchor="left"
+              open={sideBarVisible}
+              onClose={sideBarCloseBarHandler}
+            >
+              <List>
+                <ListItem>
+                  <Box
+                    display={"flex"}
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Typography> Shopping By Category</Typography>
+                    <IconButton
+                      aria-label="close"
+                      onClick={sideBarCloseBarHandler}
+                    >
+                      <Cancel />
+                    </IconButton>
+                  </Box>
+                </ListItem>
+                <Divider light />
+                {categories.map((category) => (
+                  <Link
+                    key={category}
+                    href={`/search?category=${category}`}
+                    passHref
+                  >
+                    <ListItem
+                      button
+                      components="a"
+                      onClick={sideBarCloseBarHandler}
+                    >
+                      <ListItemText primary={category}></ListItemText>
+                    </ListItem>
+                  </Link>
+                ))}
+              </List>
+            </Drawer>
             <div className={classes.grow}> </div>
             <div>
               <Switch checked={darkMode} onChange={darkModeChangeHandler}>
