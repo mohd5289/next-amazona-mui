@@ -1,8 +1,8 @@
-import Head from 'next/head';
-import Image from 'next/image';
+import Head from "next/head";
+import Image from "next/image";
 // import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css';
-import Layout from '../components/Layout';
+import styles from "@/styles/Home.module.css";
+import Layout from "../components/Layout";
 import {
   Button,
   Card,
@@ -11,17 +11,18 @@ import {
   CardContent,
   CardMedia,
   Grid,
+  Rating,
   Typography,
-} from '@mui/material';
-import data from '@/utils/data';
-import Link from 'next/link';
-import db from '@/utils/db';
-import Product from '@/models/Product';
-import { useRouter } from 'next/router';
-import useStyles from '@/utils/styles';
-import { useContext } from 'react';
-import { Store } from '@/utils/Store';
-import axios from 'axios';
+} from "@mui/material";
+import data from "@/utils/data";
+import Link from "next/link";
+import db from "@/utils/db";
+import Product from "@/models/Product";
+import { useRouter } from "next/router";
+import useStyles from "@/utils/styles";
+import { useContext } from "react";
+import { Store } from "@/utils/Store";
+import axios from "axios";
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -40,11 +41,11 @@ export default function Home(props) {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert("Sorry. Product is out of stock");
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
-    router.push('/cart');
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    router.push("/cart");
   };
   return (
     <Layout>
@@ -64,6 +65,7 @@ export default function Home(props) {
                     <CardContent>
                       <Typography>{product.name}</Typography>
                     </CardContent>
+                    <Rating value={product.rating} readOnly></Rating>
                   </CardActionArea>
                 </Link>
                 <CardActions>
@@ -87,7 +89,7 @@ export default function Home(props) {
 
 export async function getServerSideProps() {
   await db.connect();
-  const products = await Product.find({}).lean();
+  const products = await Product.find({}, "-reviews").lean();
   await db.disconnect();
 
   return {
