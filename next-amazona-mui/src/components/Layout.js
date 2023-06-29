@@ -30,8 +30,9 @@ import { Store } from "@/utils/Store";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Menu as MenuIcon } from "@material-ui/icons";
-import { Cancel } from "@material-ui/icons";
+import CancelIcon from "@mui/icons-material/Cancel";
+import MenuIcon from "@mui/icons-material/Menu";
+// import { Cancel } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
 import axios from "axios";
 import { getError } from "@/utils/error";
@@ -166,7 +167,7 @@ export default function Layout({ title, description, children }) {
                       aria-label="close"
                       onClick={sideBarCloseBarHandler}
                     >
-                      <Cancel />
+                      <CancelIcon />
                     </IconButton>
                   </Box>
                 </ListItem>
