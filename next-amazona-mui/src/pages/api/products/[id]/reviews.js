@@ -2,7 +2,7 @@ import db from "@/utils/db";
 import nextConnect from "next-connect";
 // import Product from '@/models/Product';
 import { onError } from "@/utils/error";
-import Order from "@/models/Order";
+// import Order from "@/models/Order";
 import { isAuth } from "@/utils/auth";
 import Product from "@/models/Product";
 import mongoose from "mongoose";

@@ -21,6 +21,7 @@ import {
   Typography,
   Divider,
   ListItemText,
+  InputBase,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import useStyles from "@/utils/styles";
@@ -32,6 +33,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import CancelIcon from "@mui/icons-material/Cancel";
 import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 // import { Cancel } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
 import axios from "axios";
@@ -74,6 +76,7 @@ export default function Layout({ title, description, children }) {
   const [anchorEl, setAnchorEl] = useState(null);
   // const [isOpen, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [query, setQuery] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
   const fetchCategories = async () => {
@@ -126,6 +129,15 @@ export default function Layout({ title, description, children }) {
   const sideBarCloseBarHandler = () => {
     setSideBarVisible(false);
   };
+  const queryChangeHandler = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    router.push(`/search?query=${query}`);
+  };
   return (
     <div>
       <Head>
@@ -141,6 +153,7 @@ export default function Layout({ title, description, children }) {
                 edge="start"
                 aria-label="open drawer"
                 onClick={sidebarOpenHandler}
+                className={classes.menuButton}
               >
                 <MenuIcon sx={classes.navbar} />
               </IconButton>
@@ -189,7 +202,23 @@ export default function Layout({ title, description, children }) {
                 ))}
               </List>
             </Drawer>
-            <div className={classes.grow}> </div>
+            <div className={classes.searchSection}>
+              <form onSubmit={submitHandler} className={classes.searchForm}>
+                <InputBase
+                  name="query"
+                  className={classes.searchInput}
+                  placeholder="Search products"
+                  onChange={queryChangeHandler}
+                />
+                <IconButton
+                  type="submit"
+                  className={classes.iconButton}
+                  aria-label="search"
+                >
+                  <SearchIcon />
+                </IconButton>
+              </form>
+            </div>
             <div>
               <Switch checked={darkMode} onChange={darkModeChangeHandler}>
                 {" "}
