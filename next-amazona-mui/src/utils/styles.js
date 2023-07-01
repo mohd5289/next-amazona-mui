@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
   mt1: {
     marginTop: "1rem",
   },
+  featuredImage: {},
 })); // some CSS that accesses the theme
 
 export default useStyles;
