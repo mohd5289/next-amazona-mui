@@ -23,6 +23,7 @@ import useStyles from "@/utils/styles";
 import { useContext } from "react";
 import { Store } from "@/utils/Store";
 import axios from "axios";
+import ProductItem from "@/components/ProductItem";
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -54,31 +55,10 @@ export default function Home(props) {
         <Grid container spacing={3}>
           {props.products.map((product) => (
             <Grid item md={4} key={product.name}>
-              <Card>
-                <Link href={`/product/${product.slug}`} passHref>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      image={product.image}
-                      title={product.name}
-                    ></CardMedia>
-                    <CardContent>
-                      <Typography>{product.name}</Typography>
-                    </CardContent>
-                    <Rating value={product.rating} readOnly></Rating>
-                  </CardActionArea>
-                </Link>
-                <CardActions>
-                  <Typography>{product.price}</Typography>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => addToCartHandler(product)}
-                  >
-                    Add to cart
-                  </Button>
-                </CardActions>
-              </Card>
+              <ProductItem
+                product={product}
+                addToCartHandler={addToCartHandler}
+              />
             </Grid>
           ))}
         </Grid>
