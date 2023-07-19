@@ -103,6 +103,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1rem",
   },
   featuredImage: {},
+  fullContainer: { height: "100vh" },
+  mapInputBox: {
+    position: "absolute",
+    display: "flex",
+    left: 0,
+    right: 0,
+    margin: "10px auto",
+    width: 300,
+    height: 40,
+    "& input": {
+      width: 250,
+    },
+  },
 })); // some CSS that accesses the theme
 
 export default useStyles;

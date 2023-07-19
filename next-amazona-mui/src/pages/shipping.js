@@ -1,15 +1,15 @@
-import Layout from '@/components/Layout';
-import useStyles from '@/utils/styles';
-import { Button, List, ListItem, TextField, Typography } from '@mui/material';
+import Layout from "@/components/Layout";
+import useStyles from "@/utils/styles";
+import { Button, List, ListItem, TextField, Typography } from "@mui/material";
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from "react";
 
-import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
-import { Store } from '@/utils/Store';
-import { Controller, useForm } from 'react-hook-form';
-import { closeSnackbar, enqueueSnackbar, useSnackbar } from 'notistack';
-import CheckoutWizard from '@/components/checkoutWizard';
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { Store } from "@/utils/Store";
+import { Controller, useForm } from "react-hook-form";
+import { closeSnackbar, enqueueSnackbar, useSnackbar } from "notistack";
+import CheckoutWizard from "@/components/checkoutWizard";
 
 export default function Shipping() {
   const {
@@ -17,6 +17,7 @@ export default function Shipping() {
     control,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm();
   const router = useRouter();
 
@@ -30,17 +31,17 @@ export default function Shipping() {
   // if (!userInfo) {
   //   router.push('/');
   // }
-
+  const { location } = shippingAddress;
   useEffect(() => {
     console.log(userInfo);
     if (!userInfo) {
-      router.push('/login?redirect=/shipping');
+      router.push("/login?redirect=/shipping");
     }
-    setValue('fullName', shippingAddress.fullName);
-    setValue('address', shippingAddress.address);
-    setValue('city', shippingAddress.city);
-    setValue('postalCode', shippingAddress.postalCode);
-    setValue('country', shippingAddress.country);
+    setValue("fullName", shippingAddress.fullName);
+    setValue("address", shippingAddress.address);
+    setValue("city", shippingAddress.city);
+    setValue("postalCode", shippingAddress.postalCode);
+    setValue("country", shippingAddress.country);
   }, []);
 
   const classes = useStyles();
@@ -48,15 +49,38 @@ export default function Shipping() {
     closeSnackbar();
 
     dispatch({
-      type: 'SAVE_SHIPPING_ADDRESS',
+      type: "SAVE_SHIPPING_ADDRESS",
       payload: { fullName, address, city, postalCode, country },
     });
     Cookies.set(
-      'shippingAddress',
-      JSON.stringify({ fullName, address, city, postalCode, country })
+      "shippingAddress",
+      JSON.stringify({ fullName, address, city, postalCode, country, location })
     );
-    router.push('/payment');
+    router.push("/payment");
     // alert('success login');
+  };
+  const chooseLocationHandler = () => {
+    const fullName = getValues("fullName");
+    const address = getValues("address");
+    const city = getValues("city");
+    const postalCode = getValues("postalCode");
+    const country = getValues("country");
+    dispatch({
+      type: "SAVE_SHIPPING_ADDRESS",
+      payload: { fullName, address, city, postalCode, country },
+    });
+    Cookies.set(
+      "shippingAddress",
+      JSON.stringify({
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+        location,
+      })
+    );
+    router.push("/map");
   };
   return (
     <Layout title="Shipping Address">
@@ -84,10 +108,10 @@ export default function Shipping() {
                   error={Boolean(errors.fullName)}
                   helperText={
                     errors.fullName
-                      ? errors.fullName.type === 'minLength'
-                        ? 'Full Name length is more than 1'
-                        : 'Full Name is required'
-                      : ''
+                      ? errors.fullName.type === "minLength"
+                        ? "Full Name length is more than 1"
+                        : "Full Name is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -112,10 +136,10 @@ export default function Shipping() {
                   error={Boolean(errors.address)}
                   helperText={
                     errors.address
-                      ? errors.address.type === 'minLength'
-                        ? 'Address length is more than 1'
-                        : 'Address is required'
-                      : ''
+                      ? errors.address.type === "minLength"
+                        ? "Address length is more than 1"
+                        : "Address is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -140,10 +164,10 @@ export default function Shipping() {
                   error={Boolean(errors.city)}
                   helperText={
                     errors.city
-                      ? errors.city.type === 'minLength'
-                        ? 'City length is more than 1'
-                        : 'City is required'
-                      : ''
+                      ? errors.city.type === "minLength"
+                        ? "City length is more than 1"
+                        : "City is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -168,10 +192,10 @@ export default function Shipping() {
                   error={Boolean(errors.postalCode)}
                   helperText={
                     errors.postalCode
-                      ? errors.postalCode.type === 'minLength'
-                        ? 'Postal Code length is more than 1'
-                        : 'Postal Code is required'
-                      : ''
+                      ? errors.postalCode.type === "minLength"
+                        ? "Postal Code length is more than 1"
+                        : "Postal Code is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -196,17 +220,29 @@ export default function Shipping() {
                   error={Boolean(errors.country)}
                   helperText={
                     errors.country
-                      ? errors.country.type === 'minLength'
-                        ? 'Country length is more than 1'
-                        : 'Country is required'
-                      : ''
+                      ? errors.country.type === "minLength"
+                        ? "Country length is more than 1"
+                        : "Country is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
               )}
             ></Controller>
           </ListItem>
-
+          <ListItem>
+            <Button
+              variant="contained"
+              type="button"
+              color="secondary"
+              onClick={chooseLocationHandler}
+            >
+              Choose on map
+            </Button>
+            <Typography>
+              {location.lat && `${location.lat}, ${location.lat}`}
+            </Typography>
+          </ListItem>
           <ListItem>
             <Button variant="contained" type="submit" fullWidth color="primary">
               Continue
